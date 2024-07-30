@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "igetgroceriessharedui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/iGetGroceries/iGetGroceriesSharedUI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4df713eb5cc783f436f96d5b1a03057206bc6936"
+      }
+    },
+    {
+      "identity" : "nnswiftuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nikolainobadi/NnSwiftUIKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c364a80c734e5a169f774a43efb996dc4ffb61d7"
+      }
+    }
+  ],
+  "version" : 2
+}
