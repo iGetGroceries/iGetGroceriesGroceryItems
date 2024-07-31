@@ -71,3 +71,11 @@ extension String {
         return "Other"
     }
 }
+
+
+// MARK: - Datasource
+extension GroceryDataSource {
+    static func previewInit(categories: [GroceryItemCategory] = GroceryItemCategory.sampleList) -> GroceryDataSource {
+        return .init(categories: categories)
+    }
+}
