@@ -17,6 +17,8 @@ struct GroceryListView: View {
             
             // TODO: - SearchBarView
             
+            // TODO: - UndoLastPurchaseButton
+            
             List(viewModel.categories) { category in
                 Section {
                     ForEach(category.items) { item in
