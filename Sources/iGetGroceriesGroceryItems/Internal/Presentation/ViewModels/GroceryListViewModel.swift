@@ -68,4 +68,8 @@ extension GroceryListViewModel {
     func undoLastPurchase() async throws {
         // TODO: - 
     }
+    
+    func addNewItem() throws {
+        
+    }
 }

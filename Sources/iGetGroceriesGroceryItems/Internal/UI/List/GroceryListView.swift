@@ -9,27 +9,35 @@ import SwiftUI
 import iGetGroceriesSharedUI
 
 struct GroceryListView: View {
-    @FocusState var isSearching: Bool
+    @FocusState private var isSearching: Bool
+    @State private var showingAddButton = true
     @StateObject var viewModel: GroceryListViewModel
     
     var body: some View {
         VStack {
             GroceryListFilterControl(selectedFilter: $viewModel.filter)
-                .onlyShow(when: true) // TODO: -
+                .onlyShow(when: !isSearching && !viewModel.noDisplayableGroceries)
             
             SearchBarView(
+                "Search groceries...",
                 searchText: $viewModel.searchText,
-                isSearching: _isSearching,
-                prompt: "Search groceries..."
+                isSearching: _isSearching
             )
             .padding(.vertical)
             .frame(width: getWidthPercent(90))
             
-            UndoLastPurchaseButton(action: viewModel.undoLastPurchase)
-                .onlyShow(when: viewModel.hasPurchasedItems)
-            
-            GroceryItemList(viewModel: viewModel)
-                .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
+            VStack {
+                UndoLastPurchaseButton(action: viewModel.undoLastPurchase)
+                    .onlyShow(when: viewModel.hasPurchasedItems)
+                
+                GroceryItemList(viewModel: viewModel)
+                    .handlingVerticalPanGesture {
+                        showingAddButton = $0 == .down
+                    }
+            }
+            .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
+            .withCircleAddButton(isShowing: $showingAddButton, action: viewModel.addNewItem)
+            .animation(.default, value: showingAddButton)
         }
         .mainBackground()
         .animation(.bouncy, value: viewModel.categories)
@@ -127,3 +135,4 @@ fileprivate extension GroceryItemCategory {
         }
     }
 }
+
