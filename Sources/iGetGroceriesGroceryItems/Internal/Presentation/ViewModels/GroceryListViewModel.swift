@@ -99,7 +99,7 @@ private extension GroceryListViewModel {
             .combineLatest($searchText, $filter)
             .subscribe(on: DispatchQueue.global(qos: .background))
             .map { categories, searchText, filter in
-                return categories.map { category in
+                return categories.compactMap { category in
                     let categoryItems = category.items
                     let filteredItems = categoryItems.filter { item in
                         if searchText.isEmpty {
@@ -107,6 +107,10 @@ private extension GroceryListViewModel {
                         }
                         
                         return item.name.localizedCaseInsensitiveContains(searchText)
+                    }
+                    
+                    if filteredItems.isEmpty {
+                        return nil
                     }
                     
                     return .init(id: category.id, name: category.name, items: filteredItems, colorInfo: category.colorInfo)
@@ -149,8 +153,4 @@ public protocol GroceryListDelegate {
     
     func saveItem(_ item: GroceryItem) async throws
     func deleteItem(_ item: GroceryItem) async throws
-}
-
-public enum GroceryListError: Error {
-    case maxLimitReaced
 }

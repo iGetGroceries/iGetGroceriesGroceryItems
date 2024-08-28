@@ -33,17 +33,35 @@ extension GroceryListViewModelTests {
         XCTAssertNil(delegate.selectedItem)
     }
     
-//    func test_categories_are_filtered_pending_on_search_text() {
-//        let categories = makeSampleCategoryList()
-//        let sut = makeSUT(categories: categories).sut
-//        
-//    }
-//    
-//    func test_categories_are_filtered_pending_on_grocery_filter() {
-//        let categories = makeSampleCategoryList()
-//        let sut = makeSUT(categories: categories).sut
-//        
-//    }
+    func test_categories_are_filtered_pending_on_search_text() {
+        let categories = makeSampleCategoryList()
+        let sut = makeSUT(categories: categories, groceryItemLimit: 2).sut
+        
+        waitForCondition(publisher: sut.$categories, cancellables: &cancellables, condition: { !$0.isEmpty })
+        
+        sut.searchText = "Appl"
+        
+        waitForCondition(publisher: sut.$categories, cancellables: &cancellables) { list in
+            return list.flatMap({ $0.items }).count == 1
+        }
+        
+        XCTAssertEqual(sut.categories.count, 1)
+    }
+    
+    func test_categories_are_filtered_pending_on_grocery_filter() {
+        let categories = makeSampleCategoryList()
+        let sut = makeSUT(categories: categories, groceryItemLimit: 2).sut
+        
+        waitForCondition(publisher: sut.$allGroceries, cancellables: &cancellables, condition: { !$0.isEmpty })
+        
+        let initialCategoryCount = sut.categories.count
+        
+        sut.filter = .hidePurchased
+        
+        waitForCondition(publisher: sut.$categories, cancellables: &cancellables, condition: { $0.count != initialCategoryCount })
+        
+        XCTAssertEqual(sut.categories.count, 1)
+    }
     
     func test_shows_details_for_selected_item() {
         let item = makeItem()
@@ -223,8 +241,8 @@ extension GroceryListViewModelTests {
         let firstItem = makeItem(id: "1", name: "Apple")
         let secondItem = makeItem(id: "2", name: "Banana")
         let firstCategory = makeCategory(id: "first", items: [firstItem, secondItem])
-        let thirdItem = makeItem(id: "10", name: "Milk")
-        let fourthItem = makeItem(id: "20", name: "Cheese")
+        let thirdItem = makeItem(id: "10", name: "Milk", purchased: true)
+        let fourthItem = makeItem(id: "20", name: "Cheese", purchased: true)
         let secondCategory = makeCategory(id: "second", items: [thirdItem, fourthItem])
         
         return [firstCategory, secondCategory]
