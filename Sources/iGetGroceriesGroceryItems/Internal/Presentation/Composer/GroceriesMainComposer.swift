@@ -9,9 +9,11 @@ import Foundation
 
 final class GroceriesMainComposer: ObservableObject {
     private let datasource: GroceryDataSource
+    private let delegate: GroceryListDelegate
     
-    init(datasource: GroceryDataSource) {
+    init(datasource: GroceryDataSource, delegate: GroceryListDelegate) {
         self.datasource = datasource
+        self.delegate = delegate
     }
 }
 
@@ -19,6 +21,6 @@ final class GroceriesMainComposer: ObservableObject {
 // MARK: - Composer
 extension GroceriesMainComposer {
     func makeListViewModel(onSelection: @escaping (GroceryItem) -> Void) -> GroceryListViewModel {
-        return .init(datasource: datasource, onSelection: onSelection)
+        return .init(datasource: datasource, delegate: delegate, onSelection: onSelection)
     }
 }

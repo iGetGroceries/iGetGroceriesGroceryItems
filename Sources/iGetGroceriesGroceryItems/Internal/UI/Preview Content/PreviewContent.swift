@@ -79,3 +79,9 @@ extension GroceryDataSource {
         return .init(categories: categories)
     }
 }
+
+// MARK: - Delegate
+class PreviewGroceryListDelegate: GroceryListDelegate {
+    func saveItem(_ item: GroceryItem) async throws { }
+    func deleteItem(_ item: GroceryItem) async throws { }
+}

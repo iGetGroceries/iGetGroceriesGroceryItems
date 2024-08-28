@@ -22,3 +22,13 @@ public struct GroceryItem: Identifiable, Hashable {
         self.oneTimePurchase = oneTimePurchase
     }
 }
+
+
+// MARK: - Helper
+public extension GroceryItem {
+    func togglePurchased() -> GroceryItem {
+        var updated = self
+        updated.purchased.toggle()
+        return updated
+    }
+}

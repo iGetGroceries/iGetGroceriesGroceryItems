@@ -13,9 +13,11 @@ final class GroceryListViewModel: ObservableObject {
     @Published var categories: [GroceryItemCategory]
     @Published private var purchasedGroceries: [GroceryItem] = []
     
+    private let delegate: GroceryListDelegate
     private let onSelection: (GroceryItem) -> Void
     
-    init(datasource: GroceryDataSource, onSelection: @escaping (GroceryItem) -> Void) {
+    init(datasource: GroceryDataSource, delegate: GroceryListDelegate, onSelection: @escaping (GroceryItem) -> Void) {
+        self.delegate = delegate
         self.categories = datasource.categories
         self.onSelection = onSelection
         
@@ -43,19 +45,28 @@ extension GroceryListViewModel {
     }
     
     func togglePurchased(_ item: GroceryItem) async throws {
-        // TODO: -
+        let updatedItem = item.togglePurchased()
+        
+        try await delegate.saveItem(updatedItem)
+        await addItemToPurchasedGroceriesIfPurchased(updatedItem)
     }
     
     func deleteItem(_ item: GroceryItem) async throws {
-        // TODO: -
+        try await delegate.deleteItem(item)
+        await removePurchasedGrocery(item)
     }
     
     func undoLastPurchase() async throws {
-        // TODO: - 
+        guard let lastPurchasedItem = purchasedGroceries.last else {
+            return
+        }
+        
+        try await delegate.saveItem(lastPurchasedItem.togglePurchased())
+        await removePurchasedGrocery()
     }
     
     func addNewItem() throws {
-        
+        onSelection(.new(id: "", name: searchText, categoryId: .other))
     }
 }
 
@@ -83,4 +94,34 @@ private extension GroceryListViewModel {
             .receive(on: DispatchQueue.main)
             .assign(to: &$categories)
     }
+}
+
+
+// MARK: - MainActor
+@MainActor
+private extension GroceryListViewModel {
+    func removePurchasedGrocery(_ item: GroceryItem? = nil) {
+        if let item, let index = purchasedGroceries.firstIndex(where: { $0.id == item.id }) {
+            purchasedGroceries.remove(at: index)
+        } else {
+            purchasedGroceries.removeLast()
+        }
+    }
+    
+    func addItemToPurchasedGroceriesIfPurchased(_ item: GroceryItem) {
+        if item.purchased {
+            purchasedGroceries.append(item)
+        } else {
+            if let index = purchasedGroceries.firstIndex(where: { $0.id == item.id }) {
+                purchasedGroceries.remove(at: index)
+            }
+        }
+    }
+}
+
+
+// MARK: - Dependencies
+public protocol GroceryListDelegate {
+    func saveItem(_ item: GroceryItem) async throws
+    func deleteItem(_ item: GroceryItem) async throws
 }

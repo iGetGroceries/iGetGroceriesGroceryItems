@@ -113,11 +113,13 @@ fileprivate struct GroceryItemRow: View {
 
 // MARK: - Preview
 #Preview {
-    NavStack(title: "Groceries") {
-        GroceryListView(viewModel: .init(datasource: .previewInit(), onSelection: { _ in }))
+    return NavStack(title: "Groceries") {
+        GroceryListView(viewModel: .init(datasource: .previewInit(), delegate: PreviewGroceryListDelegate(), onSelection: { _ in }))
             .withErrorHandling()
     }
 }
+
+
 
 
 // MARK: - Extension Dependencies

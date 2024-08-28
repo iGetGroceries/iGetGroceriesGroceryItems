@@ -14,9 +14,9 @@ public struct GroceryMainView: View {
     let onSelection: (GroceryItem) -> ()
     
     // TODO: - need to add binding
-    public init(datasource: GroceryDataSource, onSelection: @escaping (GroceryItem) -> Void) {
+    public init(datasource: GroceryDataSource, delegate: GroceryListDelegate, onSelection: @escaping (GroceryItem) -> Void) {
         self.onSelection = onSelection
-        self._composer = .init(wrappedValue: .init(datasource: datasource))
+        self._composer = .init(wrappedValue: .init(datasource: datasource, delegate: delegate))
     }
     
     public var body: some View {
@@ -28,6 +28,6 @@ public struct GroceryMainView: View {
 // MARK: - Preview
 #Preview {
     NavStack(title: "Groceries") {
-        GroceryMainView(datasource: .previewInit(), onSelection: { _ in })
+        GroceryMainView(datasource: .previewInit(), delegate: PreviewGroceryListDelegate(), onSelection: { _ in })
     }
 }
