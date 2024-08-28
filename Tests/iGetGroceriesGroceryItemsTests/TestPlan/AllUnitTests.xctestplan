@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "6A2827A2-518E-41F3-B212-47D4441DF4E2",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "iGetGroceriesGroceryItems",
+          "name" : "iGetGroceriesGroceryItems"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "iGetGroceriesGroceryItemsTests",
+        "name" : "iGetGroceriesGroceryItemsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -31,9 +31,11 @@ struct GroceryListView: View {
                     .onlyShow(when: viewModel.hasPurchasedItems)
                 
                 GroceryItemList(viewModel: viewModel)
+                #if canImport(UIkit)
                     .handlingVerticalPanGesture {
                         showingAddButton = $0 == .down
                     }
+                #endif
             }
             .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
             .withCircleAddButton(isShowing: $showingAddButton, action: viewModel.addNewItem)
@@ -76,7 +78,9 @@ fileprivate struct GroceryItemList: View {
             .listRowInsets(.init(top: 0, leading: 0, bottom: getHeightPercent(2), trailing: 0))
             .onlyShow(when: !category.items.isEmpty)
         }
+        #if canImport(UIKit)
         .listStyle(.insetGrouped)
+        #endif
         .scrollContentBackground(.hidden)
     }
 }
