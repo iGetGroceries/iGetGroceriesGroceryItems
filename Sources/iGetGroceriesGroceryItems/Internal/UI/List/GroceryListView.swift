@@ -114,7 +114,7 @@ fileprivate struct GroceryItemRow: View {
 // MARK: - Preview
 #Preview {
     NavStack(title: "Groceries") {
-        GroceryListView(viewModel: .init(datasource: .previewInit()))
+        GroceryListView(viewModel: .init(datasource: .previewInit(), onSelection: { _ in }))
             .withErrorHandling()
     }
 }

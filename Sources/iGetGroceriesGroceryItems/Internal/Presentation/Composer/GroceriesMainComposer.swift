@@ -18,7 +18,7 @@ final class GroceriesMainComposer: ObservableObject {
 
 // MARK: - Composer
 extension GroceriesMainComposer {
-    func makeListViewModel() -> GroceryListViewModel {
-        return .init(datasource: datasource)
+    func makeListViewModel(onSelection: @escaping (GroceryItem) -> Void) -> GroceryListViewModel {
+        return .init(datasource: datasource, onSelection: onSelection)
     }
 }

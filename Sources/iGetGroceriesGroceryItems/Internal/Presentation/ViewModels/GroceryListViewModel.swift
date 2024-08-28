@@ -13,28 +13,13 @@ final class GroceryListViewModel: ObservableObject {
     @Published var categories: [GroceryItemCategory]
     @Published private var purchasedGroceries: [GroceryItem] = []
     
-    init(datasource: GroceryDataSource) {
-        categories = datasource.categories
-        datasource.$categories.assign(to: &$categories)
-        datasource.$categories
-            .combineLatest($searchText, $filter)
-            .subscribe(on: DispatchQueue.global(qos: .background))
-            .map { categories, searchText, filter in
-                return categories.map { category in
-                    let categoryItems = category.items
-                    let filteredItems = categoryItems.filter { item in
-                        if searchText.isEmpty {
-                            return filter == .showAll ? true : !item.purchased
-                        }
-                        
-                        return item.name.localizedCaseInsensitiveContains(searchText)
-                    }
-                    
-                    return .init(id: category.id, name: category.name, items: filteredItems, colorInfo: category.colorInfo)
-                }
-            }
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$categories)
+    private let onSelection: (GroceryItem) -> Void
+    
+    init(datasource: GroceryDataSource, onSelection: @escaping (GroceryItem) -> Void) {
+        self.categories = datasource.categories
+        self.onSelection = onSelection
+        
+        self.startObservers(datasource)
     }
 }
 
@@ -54,7 +39,7 @@ extension GroceryListViewModel {
 // MARK: - Actions
 extension GroceryListViewModel {
     func showDetails(for item: GroceryItem) {
-        // TODO: -
+        onSelection(item)
     }
     
     func togglePurchased(_ item: GroceryItem) async throws {
@@ -71,5 +56,31 @@ extension GroceryListViewModel {
     
     func addNewItem() throws {
         
+    }
+}
+
+
+// MARK: - Private Methods
+private extension GroceryListViewModel {
+    func startObservers(_ datasource: GroceryDataSource) {
+        datasource.$categories
+            .combineLatest($searchText, $filter)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .map { categories, searchText, filter in
+                return categories.map { category in
+                    let categoryItems = category.items
+                    let filteredItems = categoryItems.filter { item in
+                        if searchText.isEmpty {
+                            return filter == .showAll ? true : !item.purchased
+                        }
+                        
+                        return item.name.localizedCaseInsensitiveContains(searchText)
+                    }
+                    
+                    return .init(id: category.id, name: category.name, items: filteredItems, colorInfo: category.colorInfo)
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$categories)
     }
 }
