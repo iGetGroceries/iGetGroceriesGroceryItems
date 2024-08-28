@@ -6,7 +6,7 @@
       "location" : "https://github.com/iGetGroceries/iGetGroceriesSharedUI.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4df713eb5cc783f436f96d5b1a03057206bc6936"
+        "revision" : "4602f03aab3c22fe99187afe8a9242ba1d4c4a52"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/nikolainobadi/NnSwiftUIKit",
       "state" : {
         "branch" : "main",
-        "revision" : "c364a80c734e5a169f774a43efb996dc4ffb61d7"
+        "revision" : "1a18f7240313013e6c1741d497680e217978c9b2"
       }
     }
   ],

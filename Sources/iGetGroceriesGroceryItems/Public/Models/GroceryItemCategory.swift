@@ -5,7 +5,7 @@
 //  Created by Nikolai Nobadi on 7/30/24.
 //
 
-public struct GroceryItemCategory: Identifiable {
+public struct GroceryItemCategory: Identifiable, Equatable {
     public let id: String
     public let name: String
     public let items: [GroceryItem]

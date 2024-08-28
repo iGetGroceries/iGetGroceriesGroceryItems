@@ -9,46 +9,67 @@ import SwiftUI
 import iGetGroceriesSharedUI
 
 struct GroceryListView: View {
+    @FocusState var isSearching: Bool
     @StateObject var viewModel: GroceryListViewModel
     
     var body: some View {
         VStack {
             GroceryListFilterControl(selectedFilter: $viewModel.filter)
+                .onlyShow(when: true) // TODO: -
             
-            // TODO: - SearchBarView
+            SearchBarView(
+                searchText: $viewModel.searchText,
+                isSearching: _isSearching,
+                prompt: "Search groceries..."
+            )
+            .padding(.vertical)
+            .frame(width: getWidthPercent(90))
             
-            // TODO: - UndoLastPurchaseButton
+            UndoLastPurchaseButton(action: viewModel.undoLastPurchase)
+                .onlyShow(when: viewModel.hasPurchasedItems)
             
-            List(viewModel.categories) { category in
-                Section {
-                    ForEach(category.items) { item in
-                        GroceryItemRow(item: item) {
-                            viewModel.showDetails(for: item)
-                        }
-                        .padding(.vertical)
-                        .asyncTapGesture(asRowItem: .noChevron) {
-                            try await viewModel.togglePurchased(item)
-                        }
-                        .withSwipeDelete("") { // TODO: - add message
-                            try await viewModel.deleteItem(item)
-                        }
-                    }
-                    .listRowBackground(Color.secondaryBackground)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
-                } header: {
-                    Text(category.name)
-                        .withFont(.caption)
-                        .padding(5)
-                        .frame(width: getWidthPercent(100), alignment: .leading)
-                        .background(category.color)
-                }
-                .listRowInsets(.init(top: 0, leading: 0, bottom: getHeightPercent(2), trailing: 0))
-                .onlyShow(when: !category.items.isEmpty)
-            }
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(.hidden)
+            GroceryItemList(viewModel: viewModel)
+                .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
         }
         .mainBackground()
+        .animation(.bouncy, value: viewModel.categories)
+    }
+}
+
+
+// MARK: - List
+fileprivate struct GroceryItemList: View {
+    @ObservedObject var viewModel: GroceryListViewModel
+    
+    var body: some View {
+        List(viewModel.categories) { category in
+            Section {
+                ForEach(category.items) { item in
+                    GroceryItemRow(item: item) {
+                        viewModel.showDetails(for: item)
+                    }
+                    .padding(.vertical)
+                    .asyncTapGesture(asRowItem: .noChevron) {
+                        try await viewModel.togglePurchased(item)
+                    }
+                    .withSwipeDelete("") { // TODO: - add message
+                        try await viewModel.deleteItem(item)
+                    }
+                }
+                .listRowBackground(Color.secondaryBackground)
+                .listRowInsets(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
+            } header: {
+                Text(category.name)
+                    .withFont(.caption)
+                    .padding(5)
+                    .frame(width: getWidthPercent(100), alignment: .leading)
+                    .background(category.color)
+            }
+            .listRowInsets(.init(top: 0, leading: 0, bottom: getHeightPercent(2), trailing: 0))
+            .onlyShow(when: !category.items.isEmpty)
+        }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
     }
 }
 
@@ -86,6 +107,7 @@ fileprivate struct GroceryItemRow: View {
 #Preview {
     NavStack(title: "Groceries") {
         GroceryListView(viewModel: .init(datasource: .previewInit()))
+            .withErrorHandling()
     }
 }
 

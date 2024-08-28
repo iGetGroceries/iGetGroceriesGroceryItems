@@ -27,7 +27,7 @@ extension GroceryItem {
     static var sampleProduceList: [GroceryItem] {
         return [
             .new(id: "0", name: "Carrots", categoryId: .produce),
-            .new(id: "1", name: "Apples", categoryId: .produce)
+            .new(id: "1", name: "Apples", purchased: true, categoryId: .produce)
         ]
     }
     
@@ -40,8 +40,8 @@ extension GroceryItem {
     
     static var sampleDairyList: [GroceryItem] {
         return [
-            .new(id: "100", name: "Milk", categoryId: .dairy),
-            .new(id: "101", name: "Cream Cheese", categoryId: .dairy)
+            .new(id: "100", name: "Milk", purchased: true, categoryId: .dairy),
+            .new(id: "101", name: "Cream Cheese", purchased: true, categoryId: .dairy)
         ]
     }
     
