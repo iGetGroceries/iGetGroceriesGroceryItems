@@ -15,6 +15,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/nikolainobadi/NnTestKit", from: "1.0.0"),
         .package(url: "https://github.com/iGetGroceries/iGetGroceriesSharedUI.git", branch: "main")
     ],
     targets: [
@@ -26,7 +27,10 @@ let package = Package(
         ),
         .testTarget(
             name: "iGetGroceriesGroceryItemsTests",
-            dependencies: ["iGetGroceriesGroceryItems"]
+            dependencies: [
+                "iGetGroceriesGroceryItems",
+                .product(name: "NnTestHelpers", package: "NnTestKit")
+            ]
         ),
     ]
 )
