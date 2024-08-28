@@ -13,7 +13,6 @@ public struct GroceryMainView: View {
     
     let onSelection: (GroceryItem) -> ()
     
-    // TODO: - need to add binding
     public init(datasource: GroceryDataSource, delegate: GroceryListDelegate, onSelection: @escaping (GroceryItem) -> Void) {
         self.onSelection = onSelection
         self._composer = .init(wrappedValue: .init(datasource: datasource, delegate: delegate))
