@@ -109,6 +109,7 @@ fileprivate struct GroceryItemRow: View {
                         .tint(.darkGreen)
                         .padding(.horizontal)
                 }
+                .buttonStyle(.plain)
             }
         }
     }
