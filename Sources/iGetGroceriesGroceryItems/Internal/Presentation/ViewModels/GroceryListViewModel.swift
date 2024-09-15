@@ -15,11 +15,13 @@ final class GroceryListViewModel: ObservableObject {
     @Published private(set) var allGroceries: [GroceryItem] = []
     
     private let delegate: GroceryListDelegate
+    private let datasource: GroceryDataSource
     private let onSelection: (GroceryItem) -> Void
     
     init(datasource: GroceryDataSource, delegate: GroceryListDelegate,
          purchasedItems: [GroceryItem] = [], onSelection: @escaping (GroceryItem) -> Void) {
         self.delegate = delegate
+        self.datasource = datasource
         self.categories = datasource.categories
         self.purchasedGroceries = purchasedItems
         self.onSelection = onSelection
@@ -31,6 +33,10 @@ final class GroceryListViewModel: ObservableObject {
 
 // MARK: - DisplayData
 extension GroceryListViewModel {
+    var shouldShowMarkets: Bool {
+        return datasource.showingAllGroceries
+    }
+    
     var hasPurchasedItems: Bool {
         return !purchasedGroceries.isEmpty
     }

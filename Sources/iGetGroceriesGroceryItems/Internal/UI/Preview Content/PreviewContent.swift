@@ -20,8 +20,8 @@ extension GroceryItemCategory {
 
 // MARK: - Item
 extension GroceryItem {
-    static func new(id: String, name: String, purchased: Bool = false, marketIds: [String] = [], categoryId: String, oneTimePurchase: Bool = false) -> GroceryItem {
-        return .init(id: id, name: name, purchased: purchased, marketIds: marketIds, categoryId: categoryId, oneTimePurchase: oneTimePurchase)
+    static func new(id: String, name: String, purchased: Bool = false, markets: [GroceryMarket] = [], categoryId: String, oneTimePurchase: Bool = false) -> GroceryItem {
+        return .init(id: id, name: name, purchased: purchased, markets: markets, categoryId: categoryId, oneTimePurchase: oneTimePurchase)
     }
     
     static var sampleProduceList: [GroceryItem] {
@@ -52,6 +52,15 @@ extension GroceryItem {
     }
 }
 
+extension GroceryMarket {
+    static var sampleList: [GroceryMarket] {
+        return [
+            .init(id: "0", name: "Sprouts"),
+            .init(id: "1", name: "Trader Joe's")
+        ]
+    }
+}
+
 
 // MARK: - Category Names
 extension String {
@@ -76,7 +85,7 @@ extension String {
 // MARK: - Datasource
 extension GroceryDataSource {
     static func previewInit(categories: [GroceryItemCategory] = GroceryItemCategory.sampleList) -> GroceryDataSource {
-        return .init(categories: categories)
+        return .init(categories: categories, showingAllGroceries: true)
     }
 }
 

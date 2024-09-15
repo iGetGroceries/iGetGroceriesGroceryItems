@@ -31,11 +31,9 @@ struct GroceryListView: View {
                     .onlyShow(when: viewModel.hasPurchasedItems)
                 
                 GroceryItemList(viewModel: viewModel)
-                #if canImport(UIkit)
                     .handlingVerticalPanGesture {
                         showingAddButton = $0 == .down
                     }
-                #endif
             }
             .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
             .withCircleAddButton(isShowing: $showingAddButton, action: viewModel.addNewItem)
@@ -55,14 +53,14 @@ fileprivate struct GroceryItemList: View {
         List(viewModel.categories) { category in
             Section {
                 ForEach(category.items) { item in
-                    GroceryItemRow(item: item) {
+                    GroceryItemRow(item: item, shouldShowMarkets: viewModel.shouldShowMarkets) {
                         viewModel.showDetails(for: item)
                     }
                     .padding(.vertical)
                     .asyncTapGesture(asRowItem: .noChevron) {
                         try await viewModel.togglePurchased(item)
                     }
-                    .withSwipeDelete("") { // TODO: - add message
+                    .withSwipeDelete("Are you sure you want to delete this item?\n\nIt will be deleted from all stores.") {
                         try await viewModel.deleteItem(item)
                     }
                 }
@@ -78,9 +76,7 @@ fileprivate struct GroceryItemList: View {
             .listRowInsets(.init(top: 0, leading: 0, bottom: getHeightPercent(2), trailing: 0))
             .onlyShow(when: !category.items.isEmpty)
         }
-        #if canImport(UIKit)
         .listStyle(.insetGrouped)
-        #endif
         .scrollContentBackground(.hidden)
     }
 }
@@ -89,10 +85,11 @@ fileprivate struct GroceryItemList: View {
 // MARK: - Row
 fileprivate struct GroceryItemRow: View {
     let item: GroceryItem
+    let shouldShowMarkets: Bool
     let showDetails: () -> Void
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             HStack {
                 Text(item.name)
                     .withFont(autoSizeLineLimit: 2)
@@ -111,6 +108,10 @@ fileprivate struct GroceryItemRow: View {
                 }
                 .buttonStyle(.plain)
             }
+            
+            Text(item.marketNames)
+                .withFont(.caption2, isDetail: true, textColor: .secondary)
+                .onlyShow(when: shouldShowMarkets)
         }
     }
 }
@@ -125,9 +126,17 @@ fileprivate struct GroceryItemRow: View {
 }
 
 
-
-
 // MARK: - Extension Dependencies
+fileprivate extension GroceryItem {
+    var marketNames: String {
+        if markets.isEmpty {
+            return "Unassigned"
+        }
+        
+        return markets.map({ $0.name }).joined(separator: ", ")
+    }
+}
+
 fileprivate extension GroceryItemCategory {
     var color: Color {
         switch colorInfo {
@@ -142,4 +151,3 @@ fileprivate extension GroceryItemCategory {
         }
     }
 }
-

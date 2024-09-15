@@ -220,7 +220,7 @@ extension GroceryListViewModelTests {
 // MARK: - SUT
 extension GroceryListViewModelTests {
     func makeSUT(categories: [GroceryItemCategory] = [], purchasedItems: [GroceryItem] = [], groceryItemLimit: Int? = nil, throwError: Bool = false, file: StaticString = #filePath, line: UInt = #line) -> (sut: GroceryListViewModel, delegate: MockDelegate) {
-        let datasource = GroceryDataSource(categories: categories)
+        let datasource = GroceryDataSource(categories: categories, showingAllGroceries: true)
         let delegate = MockDelegate(throwError: throwError, groceryItemLimit: groceryItemLimit)
         let sut = GroceryListViewModel(datasource: datasource, delegate: delegate, purchasedItems: purchasedItems, onSelection: delegate.onSelection(_:))
         
@@ -230,7 +230,7 @@ extension GroceryListViewModelTests {
     }
     
     func makeItem(id: String = "itemId", name: String = "", purchased: Bool = false, oneTimePurchase: Bool = false) -> GroceryItem {
-        return .init(id: id, name: name, purchased: purchased, marketIds: [], categoryId: "", oneTimePurchase: oneTimePurchase)
+        return .init(id: id, name: name, purchased: purchased, markets: [], categoryId: "", oneTimePurchase: oneTimePurchase)
     }
     
     func makeCategory(id: String = "categoryId", items: [GroceryItem] = []) -> GroceryItemCategory {

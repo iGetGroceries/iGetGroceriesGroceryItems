@@ -10,7 +10,10 @@ import Foundation
 public final class GroceryDataSource: ObservableObject {
     @Published public var categories: [GroceryItemCategory]
     
-    public init(categories: [GroceryItemCategory] = []) {
+    let showingAllGroceries: Bool
+    
+    public init(categories: [GroceryItemCategory] = [], showingAllGroceries: Bool) {
         self.categories = categories
+        self.showingAllGroceries = showingAllGroceries
     }
 }
