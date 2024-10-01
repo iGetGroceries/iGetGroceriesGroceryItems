@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iGetGroceriesSharedUI
 
 struct GroceryListFilterControl: View {
     @Binding var selectedFilter: GroceryListFilterOption
@@ -20,8 +21,7 @@ struct GroceryListFilterControl: View {
         .pickerStyle(.segmented)
         .padding([.top])
         .onAppear {
-            // TODO: -
-//            setSegmentedPickerAppearance()
+            setSegmentedPickerAppearance()
         }
     }
 }

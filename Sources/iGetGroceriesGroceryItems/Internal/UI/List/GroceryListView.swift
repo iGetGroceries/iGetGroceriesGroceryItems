@@ -127,6 +127,12 @@ fileprivate struct GroceryItemRow: View {
 
 
 // MARK: - Extension Dependencies
+fileprivate extension GroceryItemCategory {
+    var color: Color {
+        return colorInfo.color
+    }
+}
+
 fileprivate extension GroceryItem {
     var marketNames: String {
         if markets.isEmpty {
@@ -134,20 +140,5 @@ fileprivate extension GroceryItem {
         }
         
         return markets.map({ $0.name }).joined(separator: ", ")
-    }
-}
-
-fileprivate extension GroceryItemCategory {
-    var color: Color {
-        switch colorInfo {
-        case .red:
-            return .red
-        case .green:
-            return .green
-        case .blue:
-            return .blue
-        case .yellow:
-            return .yellow
-        }
     }
 }
