@@ -64,6 +64,9 @@ fileprivate struct GroceryItemList: View {
                     GroceryItemRow(item: item, shouldShowMarkets: viewModel.shouldShowMarkets) {
                         viewModel.showDetails(for: item)
                     }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        return 0
+                    }
                     .padding(.vertical)
                     .asyncTapGesture(asRowItem: .noChevron) {
                         try await viewModel.togglePurchased(item)
@@ -97,32 +100,34 @@ fileprivate struct GroceryItemRow: View {
     let showDetails: () -> Void
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Button(action: showDetails) {
-                    Image(systemName: "info.circle")
-                        .tint(.darkGreen)
-                        .padding(.horizontal)
-                }
-                .buttonStyle(.plain)
-                .setGroceryListIdAccessId(.groceryItemInfoButton)
-                
+        HStack {
+            Button(action: showDetails) {
+                Image(systemName: "info.circle")
+                    .tint(.darkGreen)
+                    .padding(.trailing)
+            }
+            .buttonStyle(.plain)
+            .setGroceryListIdAccessId(.groceryItemInfoButton)
+            
+            VStack(alignment: .leading) {
                 Text(item.name)
                     .withFont(autoSizeLineLimit: 2)
                     .opacity(item.purchased ? 0.5 : 1)
+                    .strikethrough(item.purchased, color: .red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Spacer()
-                
-                Text("Purchased")
-                    .withFont(textColor: .red)
-                    .setGroceryListIdAccessId(.groceryItemPurchasedLabel)
-                    .onlyShow(when: item.purchased)
+                Text(item.marketNames)
+                    .withFont(.caption2, isDetail: true, textColor: .secondary)
+                    .setGroceryListIdAccessId(.groceryItemMarketsLabel)
+                    .onlyShow(when: shouldShowMarkets)
             }
-            
-            Text(item.marketNames)
-                .withFont(.caption2, isDetail: true, textColor: .secondary)
-                .setGroceryListIdAccessId(.groceryItemMarketsLabel)
-                .onlyShow(when: shouldShowMarkets)
+        }
+        .overlay(alignment: .trailing) {
+            Text("Purchased")
+                .padding(.trailing)
+                .withFont(textColor: .red)
+                .setGroceryListIdAccessId(.groceryItemPurchasedLabel)
+                .onlyShow(when: item.purchased)
         }
     }
 }
@@ -163,7 +168,7 @@ fileprivate extension View {
 fileprivate extension String {
     static var deleteItemMessage: String {
         return "Are you sure you want to delete this item?"
-            .nnSkipLine("It will be deleted from all stores.")
+//            .nnSkipLine("It will be deleted from all stores.")
     }
     
     static func accessId(_ id: GroceryListAccessibilityId) -> String {
