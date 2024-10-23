@@ -13,6 +13,10 @@ let package = Package(
             name: "iGetGroceriesGroceryItems",
             targets: ["iGetGroceriesGroceryItems"]
         ),
+        .library(
+            name: "iGetGroceriesGroceryItemsAccessibility",
+            targets: ["iGetGroceriesGroceryItemsAccessibility"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/nikolainobadi/NnTestKit", from: "1.0.0"),
@@ -22,9 +26,11 @@ let package = Package(
         .target(
             name: "iGetGroceriesGroceryItems",
             dependencies: [
-                "iGetGroceriesSharedUI"
+                "iGetGroceriesSharedUI",
+                "iGetGroceriesGroceryItemsAccessibility"
             ]
         ),
+        .target(name: "iGetGroceriesGroceryItemsAccessibility"),
         .testTarget(
             name: "iGetGroceriesGroceryItemsTests",
             dependencies: [

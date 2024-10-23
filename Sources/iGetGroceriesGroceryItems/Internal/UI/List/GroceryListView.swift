@@ -7,6 +7,7 @@
 
 import SwiftUI
 import iGetGroceriesSharedUI
+import iGetGroceriesGroceryItemsAccessibility
 
 struct GroceryListView: View {
     @FocusState private var isSearching: Bool
@@ -16,6 +17,7 @@ struct GroceryListView: View {
     var body: some View {
         VStack {
             GroceryListFilterControl(selectedFilter: $viewModel.filter)
+                .setGroceryListIdAccessId(.filterControl)
                 .onlyShow(when: !isSearching && !viewModel.noDisplayableGroceries)
             
             SearchBarView(
@@ -28,15 +30,21 @@ struct GroceryListView: View {
             
             VStack {
                 UndoLastPurchaseButton(action: viewModel.undoLastPurchase)
+                    .setGroceryListIdAccessId(.undoLastPurchaseButton)
                     .onlyShow(when: viewModel.hasPurchasedItems)
                 
                 GroceryItemList(viewModel: viewModel)
+                    .setGroceryListIdAccessId(.groceryListTable)
                     .handlingVerticalPanGesture {
                         showingAddButton = $0 == .down
                     }
             }
             .withEmptyListView(listEmpty: viewModel.noDisplayableGroceries, listType: .groceries(viewModel.searchText))
-            .withCircleAddButton(isShowing: $showingAddButton, action: viewModel.addNewItem)
+            .withCircleAddButton(
+                isShowing: $showingAddButton,
+                accessibilityId: .accessId(.addNewItemButton),
+                action: viewModel.addNewItem
+            )
             .animation(.default, value: showingAddButton)
         }
         .mainBackground()
@@ -60,7 +68,7 @@ fileprivate struct GroceryItemList: View {
                     .asyncTapGesture(asRowItem: .noChevron) {
                         try await viewModel.togglePurchased(item)
                     }
-                    .withSwipeDelete("Are you sure you want to delete this item?\n\nIt will be deleted from all stores.") {
+                    .withSwipeDelete(.deleteItemMessage) {
                         try await viewModel.deleteItem(item)
                     }
                 }
@@ -91,6 +99,14 @@ fileprivate struct GroceryItemRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
+                Button(action: showDetails) {
+                    Image(systemName: "info.circle")
+                        .tint(.darkGreen)
+                        .padding(.horizontal)
+                }
+                .buttonStyle(.plain)
+                .setGroceryListIdAccessId(.groceryItemInfoButton)
+                
                 Text(item.name)
                     .withFont(autoSizeLineLimit: 2)
                     .opacity(item.purchased ? 0.5 : 1)
@@ -99,18 +115,13 @@ fileprivate struct GroceryItemRow: View {
                 
                 Text("Purchased")
                     .withFont(textColor: .red)
+                    .setGroceryListIdAccessId(.groceryItemPurchasedLabel)
                     .onlyShow(when: item.purchased)
-                
-                Button(action: showDetails) {
-                    Image(systemName: "info.circle")
-                        .tint(.darkGreen)
-                        .padding(.horizontal)
-                }
-                .buttonStyle(.plain)
             }
             
             Text(item.marketNames)
                 .withFont(.caption2, isDetail: true, textColor: .secondary)
+                .setGroceryListIdAccessId(.groceryItemMarketsLabel)
                 .onlyShow(when: shouldShowMarkets)
         }
     }
@@ -140,5 +151,22 @@ fileprivate extension GroceryItem {
         }
         
         return markets.map({ $0.name }).joined(separator: ", ")
+    }
+}
+
+fileprivate extension View {
+    func setGroceryListIdAccessId(_ id: GroceryListAccessibilityId) -> some View {
+        accessibilityIdentifier(id.rawValue)
+    }
+}
+
+fileprivate extension String {
+    static var deleteItemMessage: String {
+        return "Are you sure you want to delete this item?"
+            .nnSkipLine("It will be deleted from all stores.")
+    }
+    
+    static func accessId(_ id: GroceryListAccessibilityId) -> String {
+        return id.rawValue
     }
 }
