@@ -84,8 +84,8 @@ extension String {
 
 // MARK: - Datasource
 extension GroceryDataSource {
-    static func previewInit(categories: [GroceryItemCategory] = GroceryItemCategory.sampleList) -> GroceryDataSource {
-        return .init(categories: categories, showingAllGroceries: true)
+    static func previewInit(user: GroceryUser = .sample, categories: [GroceryItemCategory] = GroceryItemCategory.sampleList) -> GroceryDataSource {
+        return .init(user: user, categories: categories, showingAllGroceries: true)
     }
 }
 
@@ -94,4 +94,10 @@ class PreviewGroceryListDelegate: GroceryListDelegate {
     var groceryItemLimit: Int? { nil }
     func saveItem(_ item: GroceryItem) async throws { }
     func deleteItem(_ item: GroceryItem) async throws { }
+}
+
+extension GroceryUser {
+    static var sample: GroceryUser {
+        return .init(isGuest: false, canAddNewItems: true)
+    }
 }

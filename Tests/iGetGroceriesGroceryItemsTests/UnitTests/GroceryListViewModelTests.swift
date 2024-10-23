@@ -82,12 +82,18 @@ extension GroceryListViewModelTests {
         }
     }
     
-    func test_throws_error_when_adding_a_new_item_when_current_max_item_limit_has_been_reached() {
-        let categories = makeSampleCategoryList()
-        let sut = makeSUT(categories: categories, groceryItemLimit: 2).sut
+    func test_guests_cannot_add_new_items_when_limit_has_been_reached() {
+        let user = makeUser(isGuest: true, canAddNewItems: false)
+        let sut = makeSUT(user: user).sut
         
-        waitForCondition(publisher: sut.$allGroceries, cancellables: &cancellables, condition: { !$0.isEmpty })
-        assertThrownError(expectedError: GroceryListError.maxLimitReaced, action: sut.addNewItem)
+        assertThrownError(expectedError: GroceryListError.guestItemLimitReached, action: sut.addNewItem)
+    }
+    
+    func test_normal_users_cannot_add_new_items_when_limit_has_been_reached() {
+        let user = makeUser(isGuest: false, canAddNewItems: false)
+        let sut = makeSUT(user: user).sut
+        
+        assertThrownError(expectedError: GroceryListError.itemLimitReached, action: sut.addNewItem)
     }
     
     func test_purchased_items_are_not_purchased_after_toggling() async {
@@ -219,14 +225,18 @@ extension GroceryListViewModelTests {
 
 // MARK: - SUT
 extension GroceryListViewModelTests {
-    func makeSUT(categories: [GroceryItemCategory] = [], purchasedItems: [GroceryItem] = [], groceryItemLimit: Int? = nil, throwError: Bool = false, file: StaticString = #filePath, line: UInt = #line) -> (sut: GroceryListViewModel, delegate: MockDelegate) {
-        let datasource = GroceryDataSource(categories: categories, showingAllGroceries: true)
+    func makeSUT(user: GroceryUser? = nil, categories: [GroceryItemCategory] = [], purchasedItems: [GroceryItem] = [], groceryItemLimit: Int? = nil, throwError: Bool = false, file: StaticString = #filePath, line: UInt = #line) -> (sut: GroceryListViewModel, delegate: MockDelegate) {
+        let datasource = GroceryDataSource(user: user ?? makeUser(), categories: categories, showingAllGroceries: true)
         let delegate = MockDelegate(throwError: throwError, groceryItemLimit: groceryItemLimit)
         let sut = GroceryListViewModel(datasource: datasource, delegate: delegate, purchasedItems: purchasedItems, onSelection: delegate.onSelection(_:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, delegate)
+    }
+    
+    func makeUser(isGuest: Bool = false, canAddNewItems: Bool = true) -> GroceryUser {
+        return .init(isGuest: isGuest, canAddNewItems: canAddNewItems)
     }
     
     func makeItem(id: String = "itemId", name: String = "", purchased: Bool = false, oneTimePurchase: Bool = false) -> GroceryItem {

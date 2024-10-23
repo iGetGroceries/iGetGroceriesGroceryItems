@@ -6,5 +6,6 @@
 //
 
 public enum GroceryListError: Error {
-    case maxLimitReaced
+    case itemLimitReached
+    case guestItemLimitReached
 }

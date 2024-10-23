@@ -79,11 +79,9 @@ extension GroceryListViewModel {
     }
     
     func addNewItem() throws {
-        if let itemLimit = delegate.groceryItemLimit, allGroceries.count >= itemLimit {
-            throw GroceryListError.maxLimitReaced
+        guard datasource.user.canAddNewItems else {
+            throw datasource.user.isGuest ? GroceryListError.guestItemLimitReached : GroceryListError.itemLimitReached
         }
-        
-        print("grocery count", allGroceries.count)
         
         onSelection(.new(id: "", name: searchText, categoryId: .other))
     }
@@ -155,8 +153,6 @@ private extension GroceryListViewModel {
 
 // MARK: - Dependencies
 public protocol GroceryListDelegate {
-    var groceryItemLimit: Int? { get }
-    
     func saveItem(_ item: GroceryItem) async throws
     func deleteItem(_ item: GroceryItem) async throws
 }
