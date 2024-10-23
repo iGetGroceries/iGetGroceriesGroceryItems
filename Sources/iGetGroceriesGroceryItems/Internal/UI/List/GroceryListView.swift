@@ -56,6 +56,7 @@ struct GroceryListView: View {
 // MARK: - List
 fileprivate struct GroceryItemList: View {
     @ObservedObject var viewModel: GroceryListViewModel
+    @State private var showingOneTimePurchaseConfirmation = false
     
     var body: some View {
         List(viewModel.categories) { category in
@@ -68,9 +69,7 @@ fileprivate struct GroceryItemList: View {
                         return 0
                     }
                     .padding(.vertical)
-                    .asyncTapGesture(asRowItem: .noChevron) {
-                        try await viewModel.togglePurchased(item)
-                    }
+                    .togglePurchasedOnTapGesture(item: item, viewModel: viewModel)
                     .withSwipeDelete(.deleteItemMessage) {
                         try await viewModel.deleteItem(item)
                     }
@@ -168,10 +167,6 @@ fileprivate extension View {
 fileprivate extension String {
     static var deleteItemMessage: String {
         return "Are you sure you want to delete this item?"
-//            .nnSkipLine("It will be deleted from all stores.")
-    }
-    
-    static func accessId(_ id: GroceryListAccessibilityId) -> String {
-        return id.rawValue
+            .nnSkipLine("It will be deleted from all stores.")
     }
 }

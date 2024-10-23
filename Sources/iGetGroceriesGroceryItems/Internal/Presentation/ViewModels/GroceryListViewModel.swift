@@ -54,14 +54,10 @@ extension GroceryListViewModel {
     }
     
     func togglePurchased(_ item: GroceryItem) async throws {
-        if item.oneTimePurchase {
-            try await deleteItem(item)
-        } else {
-            let updatedItem = item.togglePurchased()
-            
-            try await delegate.saveItem(updatedItem)
-            await addItemToPurchasedGroceriesIfPurchased(updatedItem)
-        }
+        let updatedItem = item.togglePurchased()
+        
+        try await delegate.saveItem(updatedItem)
+        await addItemToPurchasedGroceriesIfPurchased(updatedItem)
     }
     
     func deleteItem(_ item: GroceryItem) async throws {

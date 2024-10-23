@@ -13,4 +13,5 @@ public enum GroceryListAccessibilityId: String {
     case undoLastPurchaseButton
     case groceryItemMarketsLabel
     case groceryItemPurchasedLabel
+    case oneTimePurchaseAlertPurchaseButton
 }

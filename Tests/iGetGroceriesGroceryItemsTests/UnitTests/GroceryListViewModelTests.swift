@@ -208,18 +208,6 @@ extension GroceryListViewModelTests {
             XCTAssertEqual(item.id, firstPurchasedItem.id)
         }
     }
-    
-    func test_unpurchased_items_are_deleted_after_toggling_when_they_are_one_time_purchases() async {
-        let unpurchasedItem = makeItem(purchased: false, oneTimePurchase: true)
-        let (sut, delegate) = makeSUT()
-        
-        await asyncAssertNoErrorThrown {
-            try await sut.togglePurchased(unpurchasedItem)
-        }
-        
-        XCTAssertNil(delegate.savedItem)
-        assertPropertyEquality(delegate.deletedItem, expectedProperty: unpurchasedItem)
-    }
 }
 
 
