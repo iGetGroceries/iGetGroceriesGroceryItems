@@ -23,6 +23,7 @@ struct ToggleItemPurchaseViewModifier: ViewModifier {
             .asyncConfirmation(
                 .oneTimePurchaseMessage,
                 showingConfirmation: $showingOneTimePurchaseConfirmation,
+                role: .destructive,
                 buttonInfo: .init(prompt: "Purchase & Delete", accessibilityId: .accessId(.oneTimePurchaseAlertPurchaseButton)),
                 action: deleteItem
             )
