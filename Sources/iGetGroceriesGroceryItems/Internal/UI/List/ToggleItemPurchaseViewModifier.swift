@@ -9,6 +9,7 @@ import SwiftUI
 import iGetGroceriesSharedUI
 import iGetGroceriesGroceryItemsAccessibility
 
+// A view modifier to toggle the purchase state of a grocery item on tap, with confirmation for one-time purchases.
 struct ToggleItemPurchaseViewModifier: ViewModifier {
     @ObservedObject var viewModel: GroceryListViewModel
     @State private var showingOneTimePurchaseConfirmation = false
@@ -47,13 +48,20 @@ private extension ToggleItemPurchaseViewModifier {
 }
 
 
-// MARK: - Extension Dependencies
+
+/// Adds a gesture to toggle the purchased state of a `GroceryItem` when the view is tapped.
+/// - Parameters:
+///   - item: The `GroceryItem` to toggle the purchased state for.
+///   - viewModel: The `GroceryListViewModel` that manages the state of the grocery list.
+/// - Returns: A modified view with a tap gesture to toggle the purchase state of the specified item.
 extension View {
     func togglePurchasedOnTapGesture(item: GroceryItem, viewModel: GroceryListViewModel) -> some View {
         modifier(ToggleItemPurchaseViewModifier(viewModel: viewModel, item: item))
     }
 }
 
+
+// MARK: - Extension Dependencies
 fileprivate extension String {
     static var oneTimePurchaseMessage: String {
         return "This item was marked as a One-Time Purchase."

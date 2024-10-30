@@ -9,6 +9,7 @@ import SwiftUI
 import iGetGroceriesSharedUI
 import iGetGroceriesGroceryItemsAccessibility
 
+/// A view that displays a list of grocery items and includes options to filter and search items.
 struct GroceryListView: View {
     @FocusState private var isSearching: Bool
     @State private var showingAddButton = true
@@ -55,6 +56,7 @@ struct GroceryListView: View {
 
 
 // MARK: - List
+/// A view representing a list of grocery items, organized by categories.
 fileprivate struct GroceryItemList: View {
     @ObservedObject var viewModel: GroceryListViewModel
     @State private var showingOneTimePurchaseConfirmation = false

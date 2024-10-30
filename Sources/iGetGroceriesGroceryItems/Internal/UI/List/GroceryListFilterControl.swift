@@ -9,6 +9,7 @@ import SwiftUI
 import iGetGroceriesSharedUI
 import iGetGroceriesGroceryItemsAccessibility
 
+/// A control for filtering grocery list items based on specific criteria.
 struct GroceryListFilterControl: View {
     @Binding var selectedFilter: GroceryListFilterOption
     

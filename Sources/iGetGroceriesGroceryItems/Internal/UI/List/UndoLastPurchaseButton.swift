@@ -8,6 +8,7 @@
 import SwiftUI
 import iGetGroceriesSharedUI
 
+/// A button to undo the last purchase in the grocery list.
 struct UndoLastPurchaseButton: View {
     let action: () async throws -> Void
     
