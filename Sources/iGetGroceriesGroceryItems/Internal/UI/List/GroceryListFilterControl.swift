@@ -7,6 +7,7 @@
 
 import SwiftUI
 import iGetGroceriesSharedUI
+import iGetGroceriesGroceryItemsAccessibility
 
 struct GroceryListFilterControl: View {
     @Binding var selectedFilter: GroceryListFilterOption
@@ -17,9 +18,10 @@ struct GroceryListFilterControl: View {
                 Text(option.rawValue)
             }
         }
-        .frame(width: getWidthPercent(90))
-        .pickerStyle(.segmented)
         .padding([.top])
+        .pickerStyle(.segmented)
+        .frame(width: getWidthPercent(90))
+        .setAccessibiltyId(.accessId(.filterControl))
         .onAppear {
             setSegmentedPickerAppearance()
         }

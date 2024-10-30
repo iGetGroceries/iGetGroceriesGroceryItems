@@ -14,4 +14,5 @@ public enum GroceryListAccessibilityId: String {
     case groceryItemMarketsLabel
     case groceryItemPurchasedLabel
     case oneTimePurchaseAlertPurchaseButton
+    case searchField = "GroceryListSearchField"
 }

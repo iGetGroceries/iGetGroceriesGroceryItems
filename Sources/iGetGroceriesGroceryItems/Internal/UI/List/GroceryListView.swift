@@ -23,7 +23,8 @@ struct GroceryListView: View {
             SearchBarView(
                 "Search groceries...",
                 searchText: $viewModel.searchText,
-                isSearching: _isSearching
+                isSearching: _isSearching,
+                accessibilityId: .accessId(.searchField)
             )
             .padding(.vertical)
             .frame(width: getWidthPercent(90))
