@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/iGetGroceries/iGetGroceriesSharedUI.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "b58fb55e06afb19b2757b4f48a016187b948e64e"
+        "revision" : "cb3faafaa3877fbcb92c1e68f43c665c9b4bc5cf",
+        "version" : "1.0.0"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nikolainobadi/NnSwiftUIKit",
       "state" : {
-        "revision" : "1a18f7240313013e6c1741d497680e217978c9b2",
-        "version" : "1.0.0"
+        "revision" : "da5e34af67ac849e5e50e4c947c8003073e3a8c0",
+        "version" : "2.0.0"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nikolainobadi/NnTestKit",
       "state" : {
-        "revision" : "25fc436219439e159972f2479b0aa73a07d50c44",
-        "version" : "1.0.0"
+        "revision" : "b4a4bdfae12977b9e0e1c157eae6e78c96adb935",
+        "version" : "1.1.0"
       }
     }
   ],
